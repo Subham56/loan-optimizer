@@ -19,21 +19,6 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=loan-optimizer-cluster'
       
-    - name: 'gcr.io/cloud-builders/gcloud'
-      args:
-      - 'beta'
-      - 'run'
-      - 'deploy'
-      - 'loan-optimizer'
-      - '--timeout'
-      - '600s'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/loan-optimizer:$COMMIT_SHA'
-      - '--region'
-      - 'europe-west1'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
       
 options:
   logging: CLOUD_LOGGING_ONLY
