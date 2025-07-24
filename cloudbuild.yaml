@@ -25,6 +25,8 @@ steps:
       - 'run'
       - 'deploy'
       - 'loan-optimizer'
+      - '--timeout'
+      - '600s'
       - '--image'
       - 'gcr.io/$PROJECT_ID/loan-optimizer:$COMMIT_SHA'
       - '--region'
