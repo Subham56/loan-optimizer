@@ -14,7 +14,7 @@ steps:
       - 'set'
       - 'image'
       - 'deployment/loan-optimizer'
-      - '*=gcr.io/$PROJECT_ID/loan-optimizer:<COMMIT_SHA>'
+      - '*=gcr.io/$PROJECT_ID/loan-optimizer:$COMMIT_SHA'
       env:
       - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=loan-optimizer-cluster'
@@ -26,7 +26,7 @@ steps:
       - 'deploy'
       - 'loan-optimizer'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/loan-optimizer:<COMMIT_SHA>'
+      - 'gcr.io/$PROJECT_ID/loan-optimizer:$COMMIT_SHA'
       - '--region'
       - 'europe-west1'
       - '--platform'
