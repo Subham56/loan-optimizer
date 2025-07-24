@@ -6,6 +6,7 @@ import com.tech.transformers.loan.optimizer.model.LoanProduct;
 import com.tech.transformers.loan.optimizer.model.Loans;
 import com.tech.transformers.loan.optimizer.repository.LoanApplicantRepository;
 import com.tech.transformers.loan.optimizer.repository.LoanProductRepository;
+import com.tech.transformers.loan.optimizer.service.ApplicantService;
 import com.tech.transformers.loan.optimizer.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,9 @@ public class LoanOptimizerController {
     @Autowired
     private LoanService loanService;
 
+    @Autowired
+    private ApplicantService applicantService;
+
     @GetMapping("/applicants")
     public List<LoanApplicant> getAllLoanApplicants(){
         return loanApplicantRepository.findAll();
@@ -37,54 +41,36 @@ public class LoanOptimizerController {
 
     @PostMapping("/all")
     public List<Loans> getLoansList(@RequestBody LoanApplicant loanApplicant){
-        return loanService.getAllLoanOptions(loanApplicant);
+        return loanService.getAllLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 
     @PostMapping("/home")
     public Loans getAllHomeLoans(@RequestBody LoanApplicant loanApplicant){
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
-        return loanService.getAllHomeLoanOptions(applicant);
+        return loanService.getAllHomeLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 
     @PostMapping("/gold")
     public Loans getAllGoldLoans(@RequestBody LoanApplicant loanApplicant){
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
-        return loanService.getAllGoldLoanOptions(loanApplicant);
+        return loanService.getAllGoldLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 
     @PostMapping("/personal")
     public Loans getAllPersonalLoans(@RequestBody LoanApplicant loanApplicant){
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
-        return loanService.getAllPersonalLoanOptions(applicant);
+        return loanService.getAllPersonalLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 
     @PostMapping("/education")
     public Loans getAllEducationLoans(@RequestBody LoanApplicant loanApplicant){
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
-        return loanService.getAllEducationLoanOptions(applicant);
+        return loanService.getAllEducationLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 
     @PostMapping("/credit")
     public Loans getAllCreditCardLoans(@RequestBody LoanApplicant loanApplicant){
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
-        return loanService.getAllCreditCardLoanOptions(applicant);
+        return loanService.getAllCreditCardLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 
     @PostMapping("/business")
     public Loans getAllBusinessLoans(@RequestBody LoanApplicant loanApplicant){
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
-        return loanService.getAllBusinessLoanOptions(applicant);
+        return loanService.getAllBusinessLoanOptions(applicantService.saveApplicant(loanApplicant));
     }
 }

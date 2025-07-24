@@ -13,6 +13,7 @@ public class LoanOptimizerApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Loan Optimizer Application - Tech Transformers");
+		System.out.println(" ..... ***** Welcome Tech Transformers ***** ..... ");
+		System.out.println(" ***** ..... TT Loan Optimizer Application ..... ***** ");
 	}
 }

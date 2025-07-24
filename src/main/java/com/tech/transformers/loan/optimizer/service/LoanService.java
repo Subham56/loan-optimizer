@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,11 +27,8 @@ public class LoanService {
     @Autowired
     private LoanApplicantRepository loanApplicantRepository;
 
-    public List<Loans> getAllLoanOptions(LoanApplicant loanApplicant) {
+    public List<Loans> getAllLoanOptions(LoanApplicant applicant) {
         List<Loans> loansList = new ArrayList<>();
-        LoanApplicant applicant = loanApplicantRepository.save(loanApplicant);
-        System.out.println("LoanApplicant saved with id: " + applicant.getApplicantId());
-
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
         if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
@@ -65,17 +63,21 @@ public class LoanService {
     }
 
     public Loans getAllHomeLoanOptions(LoanApplicant applicant) {
+        List<Integer> allTenures = Arrays.asList(new Integer[]{5, 10, 15, 20, 25});
+
         Loans loans = new Loans();
         loans.setLoanCategory(LoanProductType.HomeLoan);
 
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.HomeLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.HOME_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
@@ -86,11 +88,13 @@ public class LoanService {
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.CarLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.CAR_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
@@ -101,11 +105,14 @@ public class LoanService {
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.PersonalLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.PERSONAL_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
@@ -116,11 +123,13 @@ public class LoanService {
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.EducationLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.EDUCATION_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
@@ -131,25 +140,30 @@ public class LoanService {
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.BusinessLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.BUSINESS_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
     public Loans getAllCreditCardLoanOptions(LoanApplicant applicant) {
         Loans loans = new Loans();
         loans.setLoanCategory(LoanProductType.CreditCardLoan);
+
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.CreditCardLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
 
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.CREDIT_CARD_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
@@ -159,11 +173,14 @@ public class LoanService {
 
         LoanProduct product = loanProductRepository.getByLoanProductType(LoanProductType.GoldLoan);
         BigDecimal eligibleEmi = LoanUtils.getEligibleEmiValue(applicant.getAnnualIncome(), applicant.getExistingEmi()); // 100 - 30
-        if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
-            List<LoanOptions> loanOptionsList = new ArrayList<>();
-            loanOptionsList.add(getLoanOption(product, eligibleEmi, product.getMaxTenureInYears()));
-            loans.setLoanOptions(loanOptionsList);
+
+        List<LoanOptions> loanOptionsList = new ArrayList<>();
+        for (Integer tenure: Constants.GOLD_LOAN_TENURES){
+            if (LoanUtils.isGreaterThan(eligibleEmi, BigDecimal.ZERO)) {
+                loanOptionsList.add(getLoanOption(product, eligibleEmi, tenure));
+            }
         }
+        loans.setLoanOptions(loanOptionsList);
         return loans;
     }
 
@@ -180,17 +197,9 @@ public class LoanService {
         loanOptions.setCreditScoreRequired(product.getCreditScoreRequired());
         loanOptions.setLoanDisbursalInDays(product.getLoanDisbursalInDays());
         loanOptions.setRemarks(product.getRemarks());
-        loanOptions.setLoanAmount(calculateLoanAmount(product, loanOptions));
+        loanOptions.setLoanAmount(LoanUtils.calculateLoanAmount(product, loanOptions));
         loanOptions.setTotalPaid(emiValue.multiply(Constants.TWELVE.multiply(BigDecimal.valueOf(tenure))));
         loanOptions.setTotalInterestPaid(loanOptions.getTotalPaid().subtract(loanOptions.getLoanAmount()));
         return loanOptions;
-    }
-
-    private static BigDecimal calculateLoanAmount(LoanProduct product, LoanOptions loanOptions) {
-        BigDecimal monthlyRoi = LoanUtils.divideInRoundingMode(LoanUtils.divideInRoundingMode(product.getRateOfInterest(), Constants.TWELVE), Constants.HUNDRED);
-        BigDecimal instalments = Constants.TWELVE.multiply(BigDecimal.valueOf(loanOptions.getTenureInYears()));
-        BigDecimal calRoiVal1 = BigDecimal.ONE.add(monthlyRoi).pow(instalments.intValue()).subtract(BigDecimal.ONE);
-        BigDecimal calRoiVal2 = monthlyRoi.multiply(BigDecimal.ONE.add(monthlyRoi).pow(instalments.intValue()));
-        return loanOptions.getLoanEmi().multiply(LoanUtils.divideInRoundingMode(calRoiVal1, calRoiVal2));
     }
 }
